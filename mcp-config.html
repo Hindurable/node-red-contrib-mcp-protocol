@@ -1,0 +1,77 @@
+<script type="text/javascript">
+    RED.nodes.registerType('mcp-config', {
+        category: 'config',
+        defaults: {
+            name: { value: "", required: true },
+            host: { value: "localhost", required: true },
+            port: { value: 1234, required: true, validate: RED.validators.number() },
+            reconnectTimeout: { value: 5000, required: true, validate: RED.validators.number() },
+            mcpVersion: { value: "1.0" },
+            deviceId: { value: "" },
+            authKey: { value: "" }
+        },
+        label: function() {
+            return this.name || "MCP Config";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="mcp-config">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-globe"></i> Host</label>
+        <input type="text" id="node-config-input-host" placeholder="localhost">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="fa fa-random"></i> Port</label>
+        <input type="text" id="node-config-input-port" placeholder="1234">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-reconnectTimeout"><i class="fa fa-clock-o"></i> Reconnect (ms)</label>
+        <input type="text" id="node-config-input-reconnectTimeout" placeholder="5000">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-mcpVersion"><i class="fa fa-code-fork"></i> MCP Version</label>
+        <input type="text" id="node-config-input-mcpVersion" placeholder="1.0">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-deviceId"><i class="fa fa-id-card"></i> Device ID</label>
+        <input type="text" id="node-config-input-deviceId" placeholder="Optional device identifier">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-authKey"><i class="fa fa-key"></i> Auth Key</label>
+        <input type="password" id="node-config-input-authKey" placeholder="Optional authentication key">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="mcp-config">
+    <p>Configuration for MCP protocol connection.</p>
+    
+    <h3>Details</h3>
+    <p>This configuration node establishes and maintains a connection to an MCP protocol server.</p>
+    <p>The connection will automatically attempt to reconnect if lost, using the specified reconnect timeout.</p>
+    
+    <h3>Properties</h3>
+    <dl class="message-properties">
+        <dt>Host <span class="property-type">string</span></dt>
+        <dd>The hostname or IP address of the MCP server.</dd>
+        
+        <dt>Port <span class="property-type">number</span></dt>
+        <dd>The port number the MCP server is listening on.</dd>
+        
+        <dt>Reconnect timeout <span class="property-type">number</span></dt>
+        <dd>Time in milliseconds to wait before attempting to reconnect after a connection failure.</dd>
+        
+        <dt>MCP Version <span class="property-type">string</span></dt>
+        <dd>The version of the MCP protocol to use.</dd>
+        
+        <dt>Device ID <span class="property-type">string</span></dt>
+        <dd>Optional identifier for this device when connecting to the MCP server.</dd>
+        
+        <dt>Auth Key <span class="property-type">string</span></dt>
+        <dd>Optional authentication key for secure connections to the MCP server.</dd>
+    </dl>
+</script>

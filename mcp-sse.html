@@ -1,0 +1,114 @@
+<script type="text/javascript">
+    RED.nodes.registerType('mcp-sse', {
+        category: 'network',
+        color: '#C0DEED',
+        defaults: {
+            name: { value: "" },
+            server: { value: "", type: "mcp-config", required: true },
+            eventTypes: { value: "" },
+            deviceId: { value: "" },
+            reconnectTimeout: { value: 5000, required: true, validate: RED.validators.number() }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "white-globe.png",
+        label: function() {
+            return this.name || "MCP SSE";
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : "";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="mcp-sse">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-server"></i> Server</label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-eventTypes"><i class="fa fa-filter"></i> Event Types</label>
+        <input type="text" id="node-input-eventTypes" placeholder="event1,event2 (comma separated, leave empty for all)">
+    </div>
+    <div class="form-row">
+        <label for="node-input-deviceId"><i class="fa fa-microchip"></i> Device ID</label>
+        <input type="text" id="node-input-deviceId" placeholder="Optional device ID filter">
+    </div>
+    <div class="form-row">
+        <label for="node-input-reconnectTimeout"><i class="fa fa-clock-o"></i> Reconnect (ms)</label>
+        <input type="text" id="node-input-reconnectTimeout" placeholder="5000">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="mcp-sse">
+    <p>A Node-RED node for receiving Server-Sent Events (SSE) from an MCP protocol server.</p>
+    
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt class="optional">topic <span class="property-type">string</span></dt>
+        <dd>Set to 'reconnect' to force reconnection to the SSE endpoint.</dd>
+        <dt class="optional">eventTypes <span class="property-type">string</span></dt>
+        <dd>Comma-separated list of event types to listen for. Updates the node configuration.</dd>
+        <dt class="optional">deviceId <span class="property-type">string</span></dt>
+        <dd>Device ID to filter events for. Updates the node configuration.</dd>
+    </dl>
+    
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>topic <span class="property-type">string</span></dt>
+        <dd>The event type or "mcp/event" if not specified.</dd>
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>The parsed event data from the SSE endpoint.</dd>
+        <dt>event <span class="property-type">object</span></dt>
+        <dd>Metadata about the event including id, timestamp, and any parsing errors.</dd>
+    </dl>
+    
+    <h3>Details</h3>
+    <p>This node connects to the SSE endpoint of an MCP server using the configuration specified in the associated MCP configuration node.</p>
+    <p>The node will automatically reconnect if the connection is lost.</p>
+    
+    <h3>Configuration</h3>
+    <ul>
+        <li><b>Server</b>: The MCP server configuration to use.</li>
+        <li><b>Event Types</b>: Optional comma-separated list of event types to listen for. Leave empty to receive all events.</li>
+        <li><b>Device ID</b>: Optional device ID to filter events for. Only events for this device will be processed.</li>
+        <li><b>Reconnect Timeout</b>: Time in milliseconds to wait before attempting to reconnect after a connection failure.</li>
+    </ul>
+    
+    <h3>Example</h3>
+    <p>To listen for all events from the MCP server:</p>
+    <pre>
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "mcp-sse",
+        "name": "MCP Events",
+        "server": "3fa97a8a.3b9946",
+        "eventTypes": "",
+        "deviceId": "",
+        "reconnectTimeout": "5000",
+        "wires": [
+            [
+                "25f5d5dd.2d836a"
+            ]
+        ]
+    },
+    {
+        "id": "25f5d5dd.2d836a",
+        "type": "debug",
+        "name": "MCP Events",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "wires": []
+    }
+]
+</pre>
+</script>

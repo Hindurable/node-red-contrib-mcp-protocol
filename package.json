@@ -1,0 +1,26 @@
+{
+  "name": "node-red-contrib-mcp-protocol",
+  "version": "0.1.1",
+  "description": "Node-RED component for MCP protocol communication",
+  "keywords": [
+    "node-red",
+    "mcp",
+    "protocol"
+  ],
+  "license": "MIT",
+  "node-red": {
+    "nodes": {
+      "mcp-in": "mcp-in.js",
+      "mcp-out": "mcp-out.js",
+      "mcp-sse": "mcp-sse.js",
+      "mcp-config": "mcp-config.js"
+    }
+  },
+  "dependencies": {
+    "net": "^1.0.2",
+    "eventsource": "^2.0.2"
+  },
+  "author": {
+    "name": "Tero Andelin"
+  }
+}

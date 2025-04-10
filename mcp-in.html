@@ -1,0 +1,69 @@
+<script type="text/javascript">
+    RED.nodes.registerType('mcp-in', {
+        category: 'network',
+        color: '#C0DEED',
+        defaults: {
+            name: { value: "" },
+            server: { value: "", type: "mcp-config", required: true },
+            topic: { value: "mcp" },
+            dataType: { value: "auto" }
+        },
+        inputs: 0,
+        outputs: 1,
+        icon: "bridge.png",
+        label: function() {
+            return this.name || "MCP In";
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : "";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="mcp-in">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-server"></i> Server</label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="mcp">
+    </div>
+    <div class="form-row">
+        <label for="node-input-dataType"><i class="fa fa-arrow-right"></i> Output as</label>
+        <select id="node-input-dataType">
+            <option value="auto">Auto-detect (string/JSON)</option>
+            <option value="string">String</option>
+            <option value="buffer">Buffer</option>
+            <option value="json">JSON</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="mcp-in">
+    <p>A Node-RED node for receiving data from an MCP protocol server.</p>
+    
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string | object | buffer</span></dt>
+        <dd>The data received from the MCP server, converted according to the selected output type.</dd>
+        <dt>topic <span class="property-type">string</span></dt>
+        <dd>The topic specified in the node configuration.</dd>
+        <dt>mcp.raw <span class="property-type">buffer</span></dt>
+        <dd>The raw data received from the MCP server.</dd>
+    </dl>
+    
+    <h3>Details</h3>
+    <p>This node connects to an MCP server using the configuration specified in the associated MCP configuration node.</p>
+    <p>The received data can be output in different formats:</p>
+    <ul>
+        <li><b>Auto-detect</b>: Attempts to parse as JSON, falls back to string</li>
+        <li><b>String</b>: Outputs data as a string</li>
+        <li><b>Buffer</b>: Outputs raw binary data</li>
+        <li><b>JSON</b>: Parses data as JSON (will error if not valid JSON)</li>
+    </ul>
+</script>

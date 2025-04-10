@@ -1,0 +1,132 @@
+<script type="text/javascript">
+    RED.nodes.registerType('mcp-out', {
+        category: 'network',
+        color: '#C0DEED',
+        defaults: {
+            name: { value: "" },
+            server: { value: "", type: "mcp-config", required: true },
+            dataType: { value: "auto" }
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "bridge.png",
+        align: "right",
+        label: function() {
+            return this.name || "MCP Out";
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : "";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="mcp-out">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-server"></i> Server</label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-dataType"><i class="fa fa-arrow-left"></i> Send as</label>
+        <select id="node-input-dataType">
+            <option value="auto">Auto-convert (string/JSON)</option>
+            <option value="string">String</option>
+            <option value="buffer">Buffer</option>
+            <option value="json">JSON</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="mcp-out">
+    <p>A Node-RED node for sending data to an MCP protocol server.</p>
+    
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string | object | buffer</span></dt>
+        <dd>The data to send to the MCP server. Will be converted according to the selected input type.</dd>
+        <dt>topic <span class="property-type">string</span></dt>
+        <dd>When set to 'tools/list', the node will request a list of available tools from the MCP server.</dd>
+    </dl>
+    
+    <h3>Details</h3>
+    <p>This node connects to an MCP server using the configuration specified in the associated MCP configuration node.</p>
+    <p>The input data can be sent in different formats:</p>
+    <ul>
+        <li><b>Auto-convert</b>: Automatically converts objects to JSON strings, other types to strings</li>
+        <li><b>String</b>: Converts input to a string before sending</li>
+        <li><b>Buffer</b>: Sends raw binary data (converts non-buffer input to buffer)</li>
+        <li><b>JSON</b>: Converts input to a JSON string before sending</li>
+    </ul>
+    
+    <h3>MCP Protocol Methods</h3>
+    <p>This node supports various MCP protocol methods through the topic property or payload.method:</p>
+    
+    <h4>Tool Management</h4>
+    <ul>
+        <li><b>tools/list</b>: Lists all available tools on the MCP server.</li>
+    </ul>
+    
+    <h4>Device Management</h4>
+    <ul>
+        <li><b>devices/list</b>: Lists all available devices on the MCP server.</li>
+        <li><b>devices/status</b>: Gets the status of a specific device. Requires deviceId parameter.</li>
+        <li><b>devices/execute</b>: Executes a command on a specific device. Requires deviceId and command parameters.</li>
+    </ul>
+    
+    <h3>Examples</h3>
+    
+    <h4>List available tools</h4>
+    <pre>{
+    topic: "tools/list",
+    payload: {}
+}</pre>
+    <p>Response:</p>
+    <pre>{
+    topic: "tools/list",
+    payload: ["tool1", "tool2", ...]
+}</pre>
+    
+    <h4>List available devices</h4>
+    <pre>{
+    topic: "devices/list",
+    payload: {}
+}</pre>
+    
+    <h4>Get device status</h4>
+    <pre>{
+    topic: "devices/status",
+    payload: {
+        deviceId: "device123"
+    }
+}</pre>
+    
+    <h4>Execute command on device</h4>
+    <pre>{
+    topic: "devices/execute",
+    payload: {
+        deviceId: "device123",
+        command: "powerOn",
+        params: {
+            mode: "normal"
+        }
+    }
+}</pre>
+    
+    <h4>Alternative JSON-RPC style</h4>
+    <p>You can also use a JSON-RPC style format:</p>
+    <pre>{
+    payload: {
+        method: "devices/execute",
+        params: {
+            deviceId: "device123",
+            command: "powerOn",
+            params: {
+                mode: "normal"
+            }
+        }
+    }
+}</pre>
+</script>
