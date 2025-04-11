@@ -21,6 +21,8 @@ module.exports = function(RED) {
         this.eventTypes = config.eventTypes || "";
         this.deviceId = config.deviceId || "";
         this.reconnectTimeout = config.reconnectTimeout || 5000;
+        this.useHttps = config.useHttps || false;
+        this.additionalParams = config.additionalParams || "";
         this.eventSource = null;
         this.reconnectTimer = null;
         
@@ -34,7 +36,8 @@ module.exports = function(RED) {
             clearTimeout(node.reconnectTimer);
             
             // Build SSE URL
-            let sseUrl = `http://${mcpConfig.host}:${mcpConfig.port}/sse`;
+            let protocol = this.useHttps ? 'https' : 'http';
+            let sseUrl = `${protocol}://${mcpConfig.host}:${mcpConfig.port}/sse`;
             
             // Add query parameters if specified
             const params = [];
@@ -45,12 +48,23 @@ module.exports = function(RED) {
                 params.push(`deviceId=${encodeURIComponent(node.deviceId)}`);
             }
             
+            // Add additional params from configuration
+            if (this.additionalParams) {
+                const additionalParamsArray = this.additionalParams.split('&').filter(p => p.trim() !== '');
+                params = params.concat(additionalParamsArray);
+            }
+            
             if (params.length > 0) {
                 sseUrl += `?${params.join('&')}`;
             }
             
             // Set up authorization headers if needed
-            const options = {};
+            const options = {
+                https: {
+                    rejectUnauthorized: false // Allow self-signed certificates
+                }
+            };
+            
             if (mcpConfig.authKey) {
                 options.headers = {
                     'Authorization': `Bearer ${mcpConfig.authKey}`
@@ -168,6 +182,20 @@ module.exports = function(RED) {
             // Allow changing device ID via message
             if (msg.deviceId) {
                 node.deviceId = msg.deviceId;
+                node.disconnect();
+                node.connect();
+            }
+            
+            // Allow changing additional params via message
+            if (msg.additionalParams) {
+                node.additionalParams = msg.additionalParams;
+                node.disconnect();
+                node.connect();
+            }
+            
+            // Allow changing HTTPS setting via message
+            if (msg.useHttps !== undefined) {
+                node.useHttps = msg.useHttps;
                 node.disconnect();
                 node.connect();
             }

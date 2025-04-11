@@ -7,6 +7,8 @@
             server: { value: "", type: "mcp-config", required: true },
             eventTypes: { value: "" },
             deviceId: { value: "" },
+            additionalParams: { value: "" },
+            useHttps: { value: false },
             reconnectTimeout: { value: 5000, required: true, validate: RED.validators.number() }
         },
         inputs: 1,
@@ -39,6 +41,14 @@
         <input type="text" id="node-input-deviceId" placeholder="Optional device ID filter">
     </div>
     <div class="form-row">
+        <label for="node-input-additionalParams"><i class="fa fa-cogs"></i> Additional Params</label>
+        <input type="text" id="node-input-additionalParams" placeholder="param1=value1&param2=value2">
+    </div>
+    <div class="form-row">
+        <label for="node-input-useHttps"><i class="fa fa-lock"></i> Use HTTPS</label>
+        <input type="checkbox" id="node-input-useHttps" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+    <div class="form-row">
         <label for="node-input-reconnectTimeout"><i class="fa fa-clock-o"></i> Reconnect (ms)</label>
         <input type="text" id="node-input-reconnectTimeout" placeholder="5000">
     </div>
@@ -55,6 +65,10 @@
         <dd>Comma-separated list of event types to listen for. Updates the node configuration.</dd>
         <dt class="optional">deviceId <span class="property-type">string</span></dt>
         <dd>Device ID to filter events for. Updates the node configuration.</dd>
+        <dt class="optional">additionalParams <span class="property-type">string</span></dt>
+        <dd>Additional URL parameters in format "param1=value1&param2=value2". Updates the node configuration.</dd>
+        <dt class="optional">useHttps <span class="property-type">boolean</span></dt>
+        <dd>Set to true to use HTTPS instead of HTTP. Updates the node configuration.</dd>
     </dl>
     
     <h3>Outputs</h3>
@@ -76,6 +90,8 @@
         <li><b>Server</b>: The MCP server configuration to use.</li>
         <li><b>Event Types</b>: Optional comma-separated list of event types to listen for. Leave empty to receive all events.</li>
         <li><b>Device ID</b>: Optional device ID to filter events for. Only events for this device will be processed.</li>
+        <li><b>Additional Params</b>: Optional additional URL parameters in format "param1=value1&param2=value2".</li>
+        <li><b>Use HTTPS</b>: Enable to use HTTPS instead of HTTP for the SSE connection.</li>
         <li><b>Reconnect Timeout</b>: Time in milliseconds to wait before attempting to reconnect after a connection failure.</li>
     </ul>
     
